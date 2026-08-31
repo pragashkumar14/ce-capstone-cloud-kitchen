@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Orders — Pam Kitchen</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #1a1a1a; color: #eee; }
+        h1 { color: #ff8c42; }
+        a { color: #ff8c42; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #333; }
+        th { color: #ff8c42; text-transform: uppercase; font-size: 0.85em; }
+        .status { padding: 3px 10px; border-radius: 12px; font-size: 0.85em; }
+        .status-received { background: #b34700; }
+        .status-completed { background: #2d8a4e; }
+        .empty { color: #777; padding: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>📋 All Orders</h1>
+    <p><a href="{{ url_for('kitchen') }}">← Back to live view</a></p>
+
+    {% if not orders %}
+    <p class="empty">No orders yet.</p>
+    {% else %}
+    <table>
+        <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Pickup</th>
+            <th>Total</th>
+            <th>Status</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.customer_name }}</td>
+            <td>{{ order.item_summary | join(', ') }}</td>
+            <td>{{ order.pickup_time }}</td>
+            <td>€{{ "%.2f"|format(order.total_cents / 100) }}</td>
+            <td><span class="status status-{{ order.status }}">{{ order.status }}</span></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>
