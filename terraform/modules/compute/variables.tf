@@ -59,3 +59,8 @@ variable "domain_name" {
   description = "Root domain for the app (e.g. pam-kitchen.online)"
   type        = string
 }
+
+variable "db_host" {
+  description = "RDS endpoint hostname (no port)"
+  type        = string
+}

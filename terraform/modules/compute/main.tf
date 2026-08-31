@@ -239,7 +239,7 @@ resource "aws_launch_template" "app" {
     apt-get install -y python3-pip python3-venv git
 
     git clone https://github.com/pragashkumar14/ce-capstone-cloud-kitchen.git /opt/app
-    cd /opt/app/app
+    cd /opt/app/app/src
     python3 -m venv venv
     ./venv/bin/pip install -r requirements.txt
 
@@ -249,10 +249,12 @@ resource "aws_launch_template" "app" {
     After=network.target
 
     [Service]
-    WorkingDirectory=/opt/app/app
-    ExecStart=/opt/app/app/venv/bin/gunicorn -b 0.0.0.0:${var.app_port} app:app
+    WorkingDirectory=/opt/app/app/src
+    ExecStart=/opt/app/app/src/venv/bin/gunicorn -b 0.0.0.0:${var.app_port} app:app
     Restart=always
     Environment=AWS_REGION=eu-west-3
+    Environment=DB_SECRET_ARN=${var.db_secret_arn}
+    Environment=DB_HOST=${var.db_host}
 
     [Install]
     WantedBy=multi-user.target

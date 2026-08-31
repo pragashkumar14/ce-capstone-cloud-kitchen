@@ -11,3 +11,8 @@ output "db_secret_arn" {
 output "db_security_group_id" {
   value = aws_security_group.db.id
 }
+
+output "db_address" {
+  description = "RDS hostname only, no port"
+  value       = aws_db_instance.main.address
+}

@@ -27,6 +27,7 @@ module "compute" {
   public_subnet_ids      = module.networking.public_subnet_ids
   db_secret_arn          = module.database.db_secret_arn
   private_app_subnet_ids = module.networking.private_app_subnet_ids
+  db_host                 = module.database.db_address
   domain_name             = "pam-kitchen.online"
 }
 
