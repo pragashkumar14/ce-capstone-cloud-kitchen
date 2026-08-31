@@ -10,6 +10,39 @@ MIN_PICKUP_LEAD_MINUTES = 30
 
 COURSES = ["starters", "main", "desserts", "drinks"]
 
+ITEM_ICONS = {
+    "Vegetable Samosa": "🥟",
+    "Chicken Rolls": "🌯",
+    "Plain Naan": "🫓",
+    "Cheese Naan": "🫓",
+    "Caesar Salad": "🥗",
+    "Greek Salad": "🥗",
+    "Chicken Biryani": "🍛",
+    "Veg Biryani": "🍛",
+    "Margherita Pizza (Small)": "🍕",
+    "Margherita Pizza (Medium)": "🍕",
+    "Margherita Pizza (Large)": "🍕",
+    "Pepperoni Pizza (Small)": "🍕",
+    "Pepperoni Pizza (Medium)": "🍕",
+    "Pepperoni Pizza (Large)": "🍕",
+    "Classic Cheeseburger": "🍔",
+    "Veggie Burger": "🍔",
+    "Sri Lankan Chicken Fried Rice": "🍚",
+    "Chicken Kottu Rotti": "🍲",
+    "French Toast": "🍞",
+    "Crepe": "🥞",
+    "Chocolate Brownie": "🍫",
+    "Tiramisu": "🍰",
+    "Coca-Cola": "🥤",
+    "Mango Lassi": "🥭",
+    "Chocolate Milkshake": "🥤",
+    "Vanilla Milkshake": "🥤",
+    "Strawberry Milkshake": "🥤",
+    "Orange Juice": "🍊",
+    "Mango Juice": "🥭",
+    "Sri Lankan Tea": "🍵",
+}
+
 
 @app.route("/")
 def menu():
@@ -23,22 +56,11 @@ def menu():
 
     menu_by_course = {c: [] for c in COURSES}
     for item in items:
+        item = dict(item)
+        item["icon"] = ITEM_ICONS.get(item["name"], "🍽️")
         menu_by_course[item["course"]].append(item)
 
     return render_template("menu.html", menu_by_course=menu_by_course, courses=COURSES)
-
-
-@app.route("/cart/add", methods=["POST"])
-def add_to_cart():
-    item_id = request.form["item_id"]
-    quantity = int(request.form.get("quantity", 1))
-
-    cart = session.get("cart", {})
-    cart[item_id] = cart.get(item_id, 0) + quantity
-    session["cart"] = cart
-
-    return redirect(url_for("menu"))
-
 
 @app.route("/cart")
 def view_cart():

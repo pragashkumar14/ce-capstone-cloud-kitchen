@@ -3,23 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Cloud Kitchen{% endblock %}</title>
+    <title>{% block title %}Pam Kitchen{% endblock %}</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background: #faf9f6; }
-        h1 { color: #b34700; }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 6px; margin-top: 30px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .item-name { font-weight: bold; }
-        .item-desc { color: #666; font-size: 0.9em; }
-        .price { color: #b34700; font-weight: bold; white-space: nowrap; margin-left: 10px; }
-        button { background: #b34700; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #8f3900; }
-        input, select { padding: 6px; margin: 4px 0; width: 100%; box-sizing: border-box; }
-        .cart-link { position: fixed; top: 20px; right: 20px; background: #b34700; color: white; padding: 10px 16px; border-radius: 20px; text-decoration: none; }
+        :root {
+            --primary: #d9480f;
+            --primary-dark: #a8380a;
+            --accent: #f4a261;
+            --bg: #fff8f0;
+            --card-bg: #ffffff;
+            --text: #2b2118;
+            --text-muted: #7a6a5a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            background: var(--bg);
+            color: var(--text);
+        }
+        header.site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 10px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-logo {
+            font-size: 2rem;
+        }
+        .brand-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+        }
+        h1 { color: var(--primary-dark); margin-bottom: 4px; }
+        h2 {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 6px;
+            margin-top: 34px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin: 10px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .item-icon { font-size: 1.6rem; margin-right: 12px; }
+        .item-main { display: flex; align-items: center; }
+        .item-name { font-weight: 700; color: var(--text); }
+        .item-desc { color: var(--text-muted); font-size: 0.88em; margin-top: 2px; }
+        .price { color: var(--primary-dark); font-weight: 700; white-space: nowrap; margin-left: 10px; }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover { background: var(--primary-dark); }
+        input, select {
+            padding: 8px;
+            margin: 4px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .cart-link {
+            background: var(--primary);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .cart-link:hover { background: var(--primary-dark); }
     </style>
 </head>
 <body>
-    <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart</a>
+    <header class="site-header">
+        <div class="brand">
+            <span class="brand-logo">🍽️</span>
+            <span class="brand-name">PAM KITCHEN</span>
+        </div>
+        <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart</a>
+    </header>
     {% block content %}{% endblock %}
 </body>
 </html>
