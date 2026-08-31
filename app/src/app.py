@@ -221,6 +221,19 @@ def kitchen():
     )
     orders = cur.fetchall()
     conn.close()
+
+@app.route("/kitchen/complete/<int:order_id>", methods=["POST"])
+def complete_order(order_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE orders SET status = 'completed' WHERE id = %s",
+        (order_id,),
+    )
+    conn.commit()
+    conn.close()
+    return redirect(url_for("kitchen"))
+
     return render_template("kitchen.html", orders=orders)
 
 

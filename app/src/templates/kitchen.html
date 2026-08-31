@@ -14,6 +14,8 @@
         .empty { color: #777; padding: 20px 0; }
         .new-order { animation: pulse 1.5s ease-in-out 2; }
         @keyframes pulse { 0%, 100% { background: transparent; } 50% { background: #4a2a00; } }
+        .pickup-btn { background: #2d8a4e; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.85em; }
+        .pickup-btn:hover { background: #226b3c; }
     </style>
 </head>
 <body>
@@ -25,7 +27,7 @@
         {% else %}
         <table id="orders-table">
             <tr>
-                <th>Order #</th><th>Customer</th><th>Items</th><th>Pickup</th><th>Total</th><th>Status</th>
+                <th>Order #</th><th>Customer</th><th>Items</th><th>Pickup</th><th>Total</th><th>Status</th><th></th>
             </tr>
         </table>
         {% endif %}
@@ -55,19 +57,24 @@
             setTimeout(() => document.body.classList.remove("flash"), 400);
         }
 
+        async function markPickedUp(orderId) {
+            await fetch(`/kitchen/complete/${orderId}`, { method: "POST" });
+            pollOrders();
+        }
+
         function renderOrders(orders) {
             const container = document.getElementById("orders-container");
             if (orders.length === 0) {
                 container.innerHTML = '<p class="empty">No active orders right now.</p>';
                 return;
             }
-            let html = '<table><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Pickup</th><th>Total</th><th>Status</th></tr>';
+            let html = '<table><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Pickup</th><th>Total</th><th>Status</th><th></th></tr>';
             for (const o of orders) {
                 const isNew = !knownOrderIds.has(o.id);
                 const rowClass = isNew ? 'new-order' : '';
                 const pickup = o.pickup_time ? new Date(o.pickup_time).toLocaleString() : '';
                 const total = (o.total_cents / 100).toFixed(2);
-                html += `<tr class="${rowClass}"><td>#${o.id}</td><td>${o.customer_name}</td><td>${o.item_summary.join(', ')}</td><td>${pickup}</td><td>€${total}</td><td><span class="status">${o.status}</span></td></tr>`;
+                html += `<tr class="${rowClass}"><td>#${o.id}</td><td>${o.customer_name}</td><td>${o.item_summary.join(', ')}</td><td>${pickup}</td><td>€${total}</td><td><span class="status">${o.status}</span></td><td><button class="pickup-btn" onclick="markPickedUp(${o.id})">Picked Up</button></td></tr>`;
             }
             html += '</table>';
             container.innerHTML = html;
@@ -92,7 +99,6 @@
             }
         }
 
-        // Seed knownOrderIds from the server-rendered initial state so the first poll doesn't false-trigger
         knownOrderIds = new Set({{ orders | map(attribute='id') | list | tojson }});
 
         setInterval(pollOrders, 3000);
