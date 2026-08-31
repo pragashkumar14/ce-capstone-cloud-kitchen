@@ -21,20 +21,20 @@ module "networking" {
 module "compute" {
   source = "./modules/compute"
 
-  project_name            = var.project_name
-  environment             = var.environment
-  vpc_id                  = module.networking.vpc_id
-  public_subnet_ids       = module.networking.public_subnet_ids
-  db_secret_arn           = module.database.db_secret_arn
-  private_app_subnet_ids  = module.networking.private_app_subnet_ids
+  project_name           = var.project_name
+  environment            = var.environment
+  vpc_id                 = module.networking.vpc_id
+  public_subnet_ids      = module.networking.public_subnet_ids
+  db_secret_arn          = module.database.db_secret_arn
+  private_app_subnet_ids = module.networking.private_app_subnet_ids
 }
 
 module "database" {
   source = "./modules/database"
 
-  project_name           = var.project_name
-  environment             = var.environment
-  vpc_id                  = module.networking.vpc_id
-  private_db_subnet_ids   = module.networking.private_db_subnet_ids
-  app_security_group_id   = module.compute.app_security_group_id
+  project_name          = var.project_name
+  environment           = var.environment
+  vpc_id                = module.networking.vpc_id
+  private_db_subnet_ids = module.networking.private_db_subnet_ids
+  app_security_group_id = module.compute.app_security_group_id
 }

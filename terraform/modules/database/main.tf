@@ -56,12 +56,12 @@ resource "aws_security_group" "db" {
 }
 
 resource "aws_db_instance" "main" {
-  identifier_prefix      = "${var.project_name}-${var.environment}-"
-  engine                 = "postgres"
-  engine_version          = "16"
-  instance_class          = var.instance_class
-  allocated_storage       = var.allocated_storage
-  storage_encrypted       = true
+  identifier_prefix = "${var.project_name}-${var.environment}-"
+  engine            = "postgres"
+  engine_version    = "16"
+  instance_class    = var.instance_class
+  allocated_storage = var.allocated_storage
+  storage_encrypted = true
 
   db_name  = var.db_name
   username = var.db_username
