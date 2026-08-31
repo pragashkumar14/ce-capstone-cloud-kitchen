@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.5.0"
 
   backend "s3" {
-    bucket         = "ce-capstone-cloud-kitchen-tfstate-4ee295"
+    bucket         = "ce-capstone-cloud-kitchen-tfstate-9c2dbc"
     key            = "terraform.tfstate"
     region         = "eu-west-3"
     encrypt        = true
