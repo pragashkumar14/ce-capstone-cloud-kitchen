@@ -170,7 +170,7 @@ resource "aws_launch_template" "app" {
     apt-get update -y
     apt-get install -y python3-pip python3-venv git
 
-    git clone https://github.com/YOUR_GITHUB_USERNAME/ce-capstone-cloud-kitchen.git /opt/app
+    git clone https://github.com/pragashkumar14/ce-capstone-cloud-kitchen.git /opt/app
     cd /opt/app/app
     python3 -m venv venv
     ./venv/bin/pip install -r requirements.txt
