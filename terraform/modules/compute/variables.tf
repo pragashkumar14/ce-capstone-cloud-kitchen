@@ -54,3 +54,8 @@ variable "db_secret_arn" {
   description = "ARN of the Secrets Manager secret holding DB credentials"
   type        = string
 }
+
+variable "domain_name" {
+  description = "Root domain for the app (e.g. pam-kitchen.online)"
+  type        = string
+}

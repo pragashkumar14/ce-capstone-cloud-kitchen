@@ -116,6 +116,22 @@ resource "aws_lb" "main" {
   }
 }
 
+# --- DNS + TLS ---
+
+resource "aws_route53_zone" "main" {
+  name = var.domain_name
+}
+
+resource "aws_acm_certificate" "main" {
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 resource "aws_lb_target_group" "app" {
   name_prefix = "ckit-"
   port        = var.app_port
