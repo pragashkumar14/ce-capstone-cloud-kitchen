@@ -30,6 +30,3 @@ output "route53_nameservers" {
   value = module.compute.route53_nameservers
 }
 
-output "route53_nameservers" {
-  value = module.compute.route53_nameservers
-}
