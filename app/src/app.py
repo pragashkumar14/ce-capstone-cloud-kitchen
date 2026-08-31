@@ -62,6 +62,18 @@ def menu():
 
     return render_template("menu.html", menu_by_course=menu_by_course, courses=COURSES)
 
+
+@app.route("/cart/add", methods=["POST"])
+def add_to_cart():
+    item_id = request.form["item_id"]
+    quantity = int(request.form.get("quantity", 1))
+
+    cart = session.get("cart", {})
+    cart[item_id] = cart.get(item_id, 0) + quantity
+    session["cart"] = cart
+
+    return redirect(url_for("menu"))
+
 @app.route("/cart")
 def view_cart():
     cart = session.get("cart", {})
