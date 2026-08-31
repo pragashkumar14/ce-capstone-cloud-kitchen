@@ -35,3 +35,5 @@ INSERT INTO menu_items (name, category, course, description, price_cents, image_
 ('Strawberry Milkshake', 'drinks', 'drinks', 'Fresh strawberry milkshake', 100, NULL),
 ('Orange Juice', 'drinks', 'drinks', 'Freshly squeezed orange juice', 100, NULL),
 ('Mango Juice', 'drinks', 'drinks', 'Fresh mango juice', 100, NULL);
+INSERT INTO menu_items (name, category, course, description, price_cents, image_url) VALUES
+('Sri Lankan Tea', 'drinks', 'drinks', 'Traditional Ceylon tea with milk and spices', 100, NULL);
