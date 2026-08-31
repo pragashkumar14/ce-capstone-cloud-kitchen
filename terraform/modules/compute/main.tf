@@ -217,10 +217,10 @@ data "aws_ami" "ubuntu" {
 # --- Auto Scaling Group ---
 
 resource "aws_autoscaling_group" "app" {
-  name_prefix         = "${var.project_name}-${var.environment}-"
-  vpc_zone_identifier = var.private_app_subnet_ids
-  target_group_arns   = [aws_lb_target_group.app.arn]
-  health_check_type   = "ELB"
+  name_prefix               = "${var.project_name}-${var.environment}-"
+  vpc_zone_identifier       = var.private_app_subnet_ids
+  target_group_arns         = [aws_lb_target_group.app.arn]
+  health_check_type         = "ELB"
   health_check_grace_period = 60
 
   min_size         = var.min_size
@@ -242,7 +242,7 @@ resource "aws_autoscaling_group" "app" {
 resource "aws_autoscaling_policy" "scale_up" {
   name                   = "${var.project_name}-${var.environment}-cpu-scaling"
   autoscaling_group_name = aws_autoscaling_group.app.name
-  policy_type             = "TargetTrackingScaling"
+  policy_type            = "TargetTrackingScaling"
 
   target_tracking_configuration {
     predefined_metric_specification {
