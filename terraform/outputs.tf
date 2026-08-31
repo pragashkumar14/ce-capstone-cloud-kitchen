@@ -25,3 +25,11 @@ output "db_endpoint" {
 output "db_secret_arn" {
   value = module.database.db_secret_arn
 }
+
+output "route53_nameservers" {
+  value = module.compute.route53_nameservers
+}
+
+output "route53_nameservers" {
+  value = module.compute.route53_nameservers
+}
