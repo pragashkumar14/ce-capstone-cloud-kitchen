@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Menu — Cloud Kitchen{% endblock %}
+{% block content %}
+<h1>Cloud Kitchen</h1>
+<p>Multi-cuisine, pickup only. Pay when you collect your order.</p>
+
+{% for course in courses %}
+    {% if menu_by_course[course] %}
+    <h2>{{ course | capitalize }}</h2>
+    {% for item in menu_by_course[course] %}
+    <div class="item">
+        <div>
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-desc">{{ item.description }}</div>
+        </div>
+        <div style="display:flex; align-items:center;">
+            <span class="price">€{{ "%.2f"|format(item.price_cents / 100) }}</span>
+            <form method="POST" action="{{ url_for('add_to_cart') }}" style="margin-left:10px;">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+{% endfor %}
+{% endblock %}

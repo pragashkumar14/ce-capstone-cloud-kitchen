@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — Cloud Kitchen{% endblock %}
+{% block content %}
+<h1>Order confirmed! 🎉</h1>
+<p>Your order number is <strong>#{{ order_id }}</strong>.</p>
+<p>Pickup time: <strong>{{ pickup_time }}</strong></p>
+<p>Pay when you collect your order. See you soon!</p>
+<p><a href="{{ url_for('menu') }}">Back to menu</a></p>
+{% endblock %}

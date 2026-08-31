@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Cloud Kitchen{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+<p>Pay when you collect your order at pickup.</p>
+
+<form method="POST" action="{{ url_for('checkout') }}">
+    <label for="customer_name">Your name</label>
+    <input type="text" id="customer_name" name="customer_name" required>
+
+    <label for="pickup_time">Pickup time</label>
+    <input type="datetime-local" id="pickup_time" name="pickup_time" required>
+
+    <button type="submit" style="margin-top:15px;">Place order</button>
+</form>
+{% endblock %}
