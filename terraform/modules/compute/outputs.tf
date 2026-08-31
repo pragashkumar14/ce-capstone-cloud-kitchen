@@ -25,7 +25,3 @@ output "route53_nameservers" {
   value       = aws_route53_zone.main.name_servers
 }
 
-output "route53_nameservers" {
-  description = "Nameservers to configure at your domain registrar (Namecheap)"
-  value       = aws_route53_zone.main.name_servers
-}
