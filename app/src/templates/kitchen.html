@@ -2,46 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="5">
     <title>Kitchen — Live Orders</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #1a1a1a; color: #eee; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #1a1a1a; color: #eee; transition: background 0.3s; }
+        body.flash { background: #ff8c42; }
         h1 { color: #ff8c42; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { text-align: left; padding: 10px; border-bottom: 1px solid #333; }
         th { color: #ff8c42; text-transform: uppercase; font-size: 0.85em; }
-        .status { padding: 3px 10px; border-radius: 12px; font-size: 0.85em; }
-        .status-received { background: #b34700; }
+        .status { padding: 3px 10px; border-radius: 12px; font-size: 0.85em; background: #b34700; }
         .empty { color: #777; padding: 20px 0; }
+        .new-order { animation: pulse 1.5s ease-in-out 2; }
+        @keyframes pulse { 0%, 100% { background: transparent; } 50% { background: #4a2a00; } }
     </style>
 </head>
 <body>
     <h1>🍳 Kitchen — Live Orders</h1>
-    <p style="color:#777;">Auto-refreshes every 5 seconds</p>
+    <p style="color:#777;">Updates automatically. New orders ring a bell.</p>
+    <div id="orders-container">
+        {% if not orders %}
+        <p class="empty">No active orders right now.</p>
+        {% else %}
+        <table id="orders-table">
+            <tr>
+                <th>Order #</th><th>Customer</th><th>Items</th><th>Pickup</th><th>Total</th><th>Status</th>
+            </tr>
+        </table>
+        {% endif %}
+    </div>
 
-    {% if not orders %}
-    <p class="empty">No active orders right now.</p>
-    {% else %}
-    <table>
-        <tr>
-            <th>Order #</th>
-            <th>Customer</th>
-            <th>Items</th>
-            <th>Pickup</th>
-            <th>Total</th>
-            <th>Status</th>
-        </tr>
-        {% for order in orders %}
-        <tr>
-            <td>#{{ order.id }}</td>
-            <td>{{ order.customer_name }}</td>
-            <td>{{ order.item_summary | join(', ') }}</td>
-            <td>{{ order.pickup_time }}</td>
-            <td>€{{ "%.2f"|format(order.total_cents / 100) }}</td>
-            <td><span class="status status-received">{{ order.status }}</span></td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
+    <script>
+        let knownOrderIds = new Set();
+
+        function playBell() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const now = ctx.currentTime;
+            [1, 1.5, 2.0].forEach((mult, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.value = 800 * mult;
+                gain.gain.setValueAtTime(0.3 / (i + 1), now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 1.5);
+            });
+        }
+
+        function flashScreen() {
+            document.body.classList.add("flash");
+            setTimeout(() => document.body.classList.remove("flash"), 400);
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById("orders-container");
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="empty">No active orders right now.</p>';
+                return;
+            }
+            let html = '<table><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Pickup</th><th>Total</th><th>Status</th></tr>';
+            for (const o of orders) {
+                const isNew = !knownOrderIds.has(o.id);
+                const rowClass = isNew ? 'new-order' : '';
+                const pickup = o.pickup_time ? new Date(o.pickup_time).toLocaleString() : '';
+                const total = (o.total_cents / 100).toFixed(2);
+                html += `<tr class="${rowClass}"><td>#${o.id}</td><td>${o.customer_name}</td><td>${o.item_summary.join(', ')}</td><td>${pickup}</td><td>€${total}</td><td><span class="status">${o.status}</span></td></tr>`;
+            }
+            html += '</table>';
+            container.innerHTML = html;
+        }
+
+        async function pollOrders() {
+            try {
+                const res = await fetch("/kitchen/api/orders");
+                const orders = await res.json();
+                const currentIds = new Set(orders.map(o => o.id));
+                const hasNewOrder = [...currentIds].some(id => !knownOrderIds.has(id)) && knownOrderIds.size > 0;
+
+                renderOrders(orders);
+
+                if (hasNewOrder) {
+                    playBell();
+                    flashScreen();
+                }
+                knownOrderIds = currentIds;
+            } catch (e) {
+                console.error("Failed to poll orders:", e);
+            }
+        }
+
+        // Seed knownOrderIds from the server-rendered initial state so the first poll doesn't false-trigger
+        knownOrderIds = new Set({{ orders | map(attribute='id') | list | tojson }});
+
+        setInterval(pollOrders, 3000);
+    </script>
 </body>
 </html>

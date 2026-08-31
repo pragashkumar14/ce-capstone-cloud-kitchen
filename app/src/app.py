@@ -131,6 +131,34 @@ def kitchen():
     orders = cur.fetchall()
     conn.close()
     return render_template("kitchen.html", orders=orders)
+@app.route("/kitchen/api/orders")
+def kitchen_orders_api():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT o.id, o.customer_name, o.pickup_time, o.status, o.total_cents, "
+        "array_agg(mi.name || ' x' || oi.quantity) AS item_summary "
+        "FROM orders o "
+        "JOIN order_items oi ON oi.order_id = o.id "
+        "JOIN menu_items mi ON mi.id = oi.menu_item_id "
+        "WHERE o.status != 'completed' "
+        "GROUP BY o.id "
+        "ORDER BY o.created_at DESC"
+    )
+    orders = cur.fetchall()
+    conn.close()
+    return jsonify([
+        {
+            "id": o["id"],
+            "customer_name": o["customer_name"],
+            "pickup_time": o["pickup_time"].isoformat() if o["pickup_time"] else None,
+            "status": o["status"],
+            "total_cents": o["total_cents"],
+            "item_summary": o["item_summary"],
+        }
+        for o in orders
+    ])
+
 
 
 if __name__ == "__main__":
