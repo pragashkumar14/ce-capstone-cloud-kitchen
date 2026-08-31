@@ -72,6 +72,8 @@ def add_to_cart():
     cart[item_id] = cart.get(item_id, 0) + quantity
     session["cart"] = cart
 
+    return redirect(url_for("menu"))
+
 @app.route("/cart/update", methods=["POST"])
 def update_cart():
     item_id = request.form["item_id"]
@@ -97,7 +99,6 @@ def remove_from_cart():
     return redirect(url_for("view_cart"))
 
 
-    return redirect(url_for("menu"))
 
 @app.route("/cart")
 def view_cart():
