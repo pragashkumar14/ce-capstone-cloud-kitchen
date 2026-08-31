@@ -1,9 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from db import get_connection
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-change-me"  # fine for now, not security-sensitive (no auth, no PII beyond a name)
+
+RESTAURANT_ADDRESS = "9 avenue Buffon, 77290 Mitry-Mory"
+MIN_PICKUP_LEAD_MINUTES = 30
 
 COURSES = ["starters", "main", "desserts", "drinks"]
 
@@ -69,23 +72,36 @@ def checkout():
     if not cart:
         return redirect(url_for("menu"))
 
+    min_pickup = (datetime.now() + timedelta(minutes=MIN_PICKUP_LEAD_MINUTES)).strftime("%Y-%m-%dT%H:%M")
+
     if request.method == "GET":
-        return render_template("checkout.html")
+        return render_template("checkout.html", min_pickup=min_pickup, restaurant_address=RESTAURANT_ADDRESS)
 
     customer_name = request.form["customer_name"]
-    pickup_time = request.form["pickup_time"]
+    pickup_time_str = request.form["pickup_time"]
+    customer_address = request.form.get("customer_address", "").strip()
+
+    pickup_time = datetime.strptime(pickup_time_str, "%Y-%m-%dT%H:%M")
+    earliest_allowed = datetime.now() + timedelta(minutes=MIN_PICKUP_LEAD_MINUTES)
+
+    if pickup_time < earliest_allowed:
+        return render_template(
+            "checkout.html",
+            min_pickup=min_pickup,
+            restaurant_address=RESTAURANT_ADDRESS,
+            error=f"Pickup time must be at least {MIN_PICKUP_LEAD_MINUTES} minutes from now.",
+        )
 
     conn = get_connection()
     cur = conn.cursor()
     ids = tuple(int(i) for i in cart.keys())
     cur.execute("SELECT * FROM menu_items WHERE id = ANY(%s)", (list(ids),))
     rows = {str(row["id"]): row for row in cur.fetchall()}
-
     total_cents = sum(rows[i]["price_cents"] * qty for i, qty in cart.items() if i in rows)
 
     cur.execute(
         "INSERT INTO orders (customer_name, pickup_time, total_cents) VALUES (%s, %s, %s) RETURNING id",
-        (customer_name, pickup_time, total_cents),
+        (customer_name, pickup_time_str, total_cents),
     )
     order_id = cur.fetchone()["id"]
 
@@ -101,7 +117,22 @@ def checkout():
     conn.close()
     session.pop("cart", None)
 
-    return render_template("confirmation.html", order_id=order_id, pickup_time=pickup_time)
+    directions_url = None
+    if customer_address:
+        from urllib.parse import quote
+        directions_url = (
+            "https://www.google.com/maps/dir/?api=1"
+            f"&origin={quote(customer_address)}"
+            f"&destination={quote(RESTAURANT_ADDRESS)}"
+        )
+
+    return render_template(
+        "confirmation.html",
+        order_id=order_id,
+        pickup_time=pickup_time_str,
+        restaurant_address=RESTAURANT_ADDRESS,
+        directions_url=directions_url,
+    )
 
 
 @app.route("/health")
@@ -131,6 +162,8 @@ def kitchen():
     orders = cur.fetchall()
     conn.close()
     return render_template("kitchen.html", orders=orders)
+
+
 @app.route("/kitchen/api/orders")
 def kitchen_orders_api():
     conn = get_connection()
@@ -158,7 +191,6 @@ def kitchen_orders_api():
         }
         for o in orders
     ])
-
 
 
 if __name__ == "__main__":
