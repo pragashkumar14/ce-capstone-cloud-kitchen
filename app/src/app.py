@@ -72,6 +72,31 @@ def add_to_cart():
     cart[item_id] = cart.get(item_id, 0) + quantity
     session["cart"] = cart
 
+@app.route("/cart/update", methods=["POST"])
+def update_cart():
+    item_id = request.form["item_id"]
+    quantity = int(request.form.get("quantity", 1))
+
+    cart = session.get("cart", {})
+    if quantity <= 0:
+        cart.pop(item_id, None)
+    else:
+        cart[item_id] = quantity
+    session["cart"] = cart
+
+    return redirect(url_for("view_cart"))
+
+
+@app.route("/cart/remove", methods=["POST"])
+def remove_from_cart():
+    item_id = request.form["item_id"]
+    cart = session.get("cart", {})
+    cart.pop(item_id, None)
+    session["cart"] = cart
+
+    return redirect(url_for("view_cart"))
+
+
     return redirect(url_for("menu"))
 
 @app.route("/cart")

@@ -18,8 +18,9 @@
         </div>
         <div style="display:flex; align-items:center;">
             <span class="price">€{{ "%.2f"|format(item.price_cents / 100) }}</span>
-            <form method="POST" action="{{ url_for('add_to_cart') }}" style="margin-left:10px;">
+            <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:flex; align-items:center; margin-left:10px; gap:6px;">
                 <input type="hidden" name="item_id" value="{{ item.id }}">
+                <input type="number" name="quantity" value="1" min="1" max="20" style="width:55px; text-align:center;">
                 <button type="submit">Add</button>
             </form>
         </div>
