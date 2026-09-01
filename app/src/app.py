@@ -43,6 +43,12 @@ ITEM_ICONS = {
     "Sri Lankan Tea": "🍵",
 }
 
+@app.context_processor
+def inject_cart_count():
+    cart = session.get("cart", {})
+    return {"cart_count": sum(cart.values())}
+
+
 @app.route("/")
 def menu():
     conn = get_connection()

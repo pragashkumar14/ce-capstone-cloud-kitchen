@@ -172,7 +172,7 @@
             <img src="https://cloud-kitchen-dev-images-20260901101749120000000001.s3.eu-west-3.amazonaws.com/images/logo.jpg" alt="Pam Kitchen" class="brand-logo">
             <span class="brand-name"><span style="color:#2d8a4e;">PAM</span> <span style="color:#4a90d9;">KITCHEN</span></span>
         </div>
-        <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart</a>
+        <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart{% if cart_count %} ({{ cart_count }}){% endif %}</a>
     </header>
     {% block content %}{% endblock %}
 </body>
