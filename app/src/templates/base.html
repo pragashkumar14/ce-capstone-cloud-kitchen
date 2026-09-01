@@ -25,12 +25,20 @@
             color: var(--text);
         }
         header.site-header {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 28px 0;
+            padding: 40px calc(50vw - 380px + 40px);
+            background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("https://cloud-kitchen-dev-images-20260901101749120000000001.s3.eu-west-3.amazonaws.com/images/page-header.jpg");
+            background-size: cover;
+            background-position: center;
             border-bottom: 3px solid var(--primary);
-            margin-bottom: 10px;
         }
         .brand {
             display: flex;
@@ -47,6 +55,7 @@
             font-size: 2.2rem;
             font-weight: 800;
             color: var(--primary-dark);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
             letter-spacing: 0.5px;
         }
         h1 { color: var(--primary-dark); margin-bottom: 4px; }
@@ -94,7 +103,7 @@
             padding: 20px calc(50vw - 380px + 20px);
             margin-top: 20px;
         }
-        .menu-wrapper h1, .menu-wrapper p { color: #ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .menu-wrapper h1, .menu-wrapper p { color: #1a1a1a; text-shadow: 0 1px 6px rgba(255,255,255,0.8), 0 0 2px rgba(255,255,255,0.9); }
         .checkout-wrapper {
             width: 100vw;
             position: relative;
