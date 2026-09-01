@@ -40,3 +40,15 @@ module "database" {
   private_db_subnet_ids = module.networking.private_db_subnet_ids
   app_security_group_id = module.compute.app_security_group_id
 }
+
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  project_name             = var.project_name
+  environment              = var.environment
+  alert_email              = "pragash_m@hotmail.co.uk"
+  alb_arn_suffix           = module.compute.alb_arn_suffix
+  target_group_arn_suffix  = module.compute.target_group_arn_suffix
+  asg_name                 = module.compute.asg_name
+  db_instance_id           = module.database.db_instance_id
+}

@@ -16,3 +16,8 @@ output "db_address" {
   description = "RDS hostname only, no port"
   value       = aws_db_instance.main.address
 }
+
+output "db_instance_id" {
+  description = "RDS instance identifier for CloudWatch metrics"
+  value       = aws_db_instance.main.id
+}

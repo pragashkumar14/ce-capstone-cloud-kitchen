@@ -25,3 +25,13 @@ output "route53_nameservers" {
   value       = aws_route53_zone.main.name_servers
 }
 
+
+output "alb_arn_suffix" {
+  description = "ALB ARN suffix for CloudWatch metrics"
+  value       = aws_lb.main.arn_suffix
+}
+
+output "target_group_arn_suffix" {
+  description = "Target group ARN suffix for CloudWatch metrics"
+  value       = aws_lb_target_group.app.arn_suffix
+}
