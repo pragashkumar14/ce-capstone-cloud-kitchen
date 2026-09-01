@@ -40,6 +40,8 @@
         .brand-logo {
             width: 44px;
             height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
         }
         .brand-name {
             font-size: 1.6rem;
@@ -93,6 +95,22 @@
             margin-top: 20px;
         }
         .menu-wrapper h1, .menu-wrapper p { color: #ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+        .checkout-wrapper {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            background-image: url("https://cloud-kitchen-dev-images-20260901101749120000000001.s3.eu-west-3.amazonaws.com/images/checkout-background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px calc(50vw - 380px + 20px) 60px;
+            margin-top: 20px;
+            min-height: 400px;
+        }
+        .checkout-wrapper h1, .checkout-wrapper p, .checkout-wrapper label { color: #ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
         .tab-bar { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
         .tab-btn {
             background: rgba(255,255,255,0.85);
@@ -142,13 +160,7 @@
 <body>
     <header class="site-header">
         <div class="brand">
-            <svg class="brand-logo" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="22" cy="22" r="20" fill="#2d8a4e"/>
-                <circle cx="22" cy="22" r="20" fill="none" stroke="#4a90d9" stroke-width="2.5"/>
-                <circle cx="22" cy="22" r="12" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
-                <path d="M14 12 L14 22 M14 16 L16 16 M14 12 L12 12" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-                <path d="M30 12 C31.5 14 31.5 18 30 20 L30 32" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-            </svg>
+            <img src="https://cloud-kitchen-dev-images-20260901101749120000000001.s3.eu-west-3.amazonaws.com/images/logo.jpg" alt="Pam Kitchen" class="brand-logo">
             <span class="brand-name"><span style="color:#2d8a4e;">PAM</span> <span style="color:#4a90d9;">KITCHEN</span></span>
         </div>
         <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart</a>

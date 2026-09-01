@@ -1,24 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Checkout — Pam Kitchen{% endblock %}
 {% block content %}
-<h1>Checkout</h1>
-<p>Pickup at: <strong>{{ restaurant_address }}</strong></p>
-<p>Pay when you collect your order. Orders need at least 30 minutes notice.</p>
-
-{% if error %}
-<p style="color:#c0392b; font-weight:bold;">{{ error }}</p>
-{% endif %}
-
-<form method="POST" action="{{ url_for('checkout') }}">
-    <label for="customer_name">Your name</label>
-    <input type="text" id="customer_name" name="customer_name" required>
-
-    <label for="pickup_time">Pickup time</label>
-    <input type="datetime-local" id="pickup_time" name="pickup_time" min="{{ min_pickup }}" value="{{ min_pickup }}" required>
-
-    <label for="customer_address">Your address (optional — get directions after ordering)</label>
-    <input type="text" id="customer_address" name="customer_address" placeholder="e.g. 12 Rue de Paris, 75001 Paris">
-
-    <button type="submit" style="margin-top:15px;">Place order</button>
-</form>
+<div class="checkout-wrapper">
+    <h1>Checkout</h1>
+    <p>Pickup at: <strong>{{ restaurant_address }}</strong></p>
+    <p>Pay when you collect your order. Orders need at least 30 minutes notice.</p>
+    {% if error %}
+    <p style="color:#ffb3b3; font-weight:bold;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" action="{{ url_for('checkout') }}">
+        <label for="customer_name">Your name</label>
+        <input type="text" id="customer_name" name="customer_name" required>
+        <label for="pickup_time">Pickup time</label>
+        <input type="datetime-local" id="pickup_time" name="pickup_time" min="{{ min_pickup }}" value="{{ min_pickup }}" required>
+        <label for="customer_address">Your address (optional — get directions after ordering)</label>
+        <input type="text" id="customer_address" name="customer_address" placeholder="e.g. 12 Rue de Paris, 75001 Paris">
+        <button type="submit" style="margin-top:15px;">Place order</button>
+    </form>
+</div>
 {% endblock %}

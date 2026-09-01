@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Order Confirmed — Pam Kitchen{% endblock %}
 {% block content %}
-<h1>Order confirmed! 🎉</h1>
-<p>Your order number is <strong>#{{ order_id }}</strong>.</p>
-<p>Pickup time: <strong>{{ pickup_time }}</strong></p>
-<p>Pickup address: <strong>{{ restaurant_address }}</strong></p>
-<p>Pay when you collect your order. See you soon!</p>
-
-{% if directions_url %}
-<p>
-    <a href="{{ directions_url }}" target="_blank" rel="noopener">
-        <button>📍 Get Directions</button>
-    </a>
-</p>
-{% endif %}
-
-<p><a href="{{ url_for('menu') }}">Back to menu</a></p>
+<div class="checkout-wrapper">
+    <h1>Order confirmed! 🎉</h1>
+    <p>Your order number is <strong>#{{ order_id }}</strong>.</p>
+    <p>Pickup time: <strong>{{ pickup_time }}</strong></p>
+    <p>Pickup address: <strong>{{ restaurant_address }}</strong></p>
+    <p>Pay when you collect your order. See you soon!</p>
+    {% if directions_url %}
+    <p>
+        <a href="{{ directions_url }}" target="_blank" rel="noopener">
+            <button>📍 Get Directions</button>
+        </a>
+    </p>
+    {% endif %}
+    <p><a href="{{ url_for('menu') }}" style="color:#ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.6);">Back to menu</a></p>
+</div>
 {% endblock %}
