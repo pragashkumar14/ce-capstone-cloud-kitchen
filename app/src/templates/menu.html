@@ -1,35 +1,56 @@
 {% extends "base.html" %}
 {% block title %}Menu — Pam Kitchen{% endblock %}
 {% block content %}
-<h1>Our Menu</h1>
-<p>Multi-cuisine, pickup only. Pay when you collect your order.</p>
 
-{% for course in courses %}
-    {% if menu_by_course[course] %}
-    <h2>{{ course | capitalize }}</h2>
-    {% for item in menu_by_course[course] %}
-    <div class="item">
-        <div class="item-main">
-            {% if item.image_url %}
-            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-photo">
-            {% else %}
-            <span class="item-icon">{{ item.icon }}</span>
-            {% endif %}
-            <div>
-                <div class="item-name">{{ item.name }}</div>
-                <div class="item-desc">{{ item.description }}</div>
+<img src="https://cloud-kitchen-dev-images-20260901101749120000000001.s3.eu-west-3.amazonaws.com/images/page-header.jpg" alt="Pam Kitchen" class="page-header-banner">
+
+<div class="menu-wrapper">
+    <h1>Our Menu</h1>
+    <p>Multi-cuisine, pickup only. Pay when you collect your order.</p>
+
+    <div class="tab-bar">
+        {% for course in courses %}
+        <button class="tab-btn {% if loop.first %}active{% endif %}" onclick="showTab('{{ course }}')" id="tab-btn-{{ course }}">{{ course | capitalize }}</button>
+        {% endfor %}
+    </div>
+
+    {% for course in courses %}
+    <div class="tab-panel {% if loop.first %}active{% endif %}" id="tab-{{ course }}">
+        {% if menu_by_course[course] %}
+        {% for item in menu_by_course[course] %}
+        <div class="item">
+            <div class="item-main">
+                {% if item.image_url %}
+                <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-photo">
+                {% else %}
+                <span class="item-icon">{{ item.icon }}</span>
+                {% endif %}
+                <div>
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-desc">{{ item.description }}</div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center;">
+                <span class="price">€{{ "%.2f"|format(item.price_cents / 100) }}</span>
+                <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:flex; align-items:center; margin-left:10px; gap:6px;">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <input type="number" name="quantity" value="1" min="1" max="20" style="width:55px; text-align:center;">
+                    <button type="submit">Add</button>
+                </form>
             </div>
         </div>
-        <div style="display:flex; align-items:center;">
-            <span class="price">€{{ "%.2f"|format(item.price_cents / 100) }}</span>
-            <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:flex; align-items:center; margin-left:10px; gap:6px;">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <input type="number" name="quantity" value="1" min="1" max="20" style="width:55px; text-align:center;">
-                <button type="submit">Add</button>
-            </form>
-        </div>
+        {% endfor %}
+        {% endif %}
     </div>
     {% endfor %}
-    {% endif %}
-{% endfor %}
+</div>
+
+<script>
+function showTab(course) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + course).classList.add('active');
+    document.getElementById('tab-btn-' + course).classList.add('active');
+}
+</script>
 {% endblock %}
