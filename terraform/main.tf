@@ -60,3 +60,10 @@ module "storage" {
   environment  = var.environment
 }
 
+
+module "config" {
+  source = "./modules/config"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
