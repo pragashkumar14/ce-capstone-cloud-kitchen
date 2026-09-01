@@ -1,40 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Your Cart — Pam Kitchen{% endblock %}
 {% block content %}
-<h1>Your Cart</h1>
-
-{% if not items %}
-<p>Your cart is empty. <a href="{{ url_for('menu') }}">Browse the menu</a>.</p>
-{% else %}
-    {% for item in items %}
-    <div class="item">
-        <div>
-            <div class="item-name">{{ item.name }}</div>
-            <div class="item-desc">€{{ "%.2f"|format(item.price_cents / 100) }} each</div>
+<div class="checkout-wrapper">
+    <h1>Your Cart</h1>
+    {% if not items %}
+    <p>Your cart is empty. <a href="{{ url_for('menu') }}" style="color:#ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.6);">Browse the menu</a>.</p>
+    {% else %}
+        {% for item in items %}
+        <div class="item">
+            <div>
+                <div class="item-name">{{ item.name }}</div>
+                <div class="item-desc">€{{ "%.2f"|format(item.price_cents / 100) }} each</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <form method="POST" action="{{ url_for('update_cart') }}" style="display:flex; align-items:center; gap:6px;">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="20" style="width:55px; text-align:center;">
+                    <button type="submit">Update</button>
+                </form>
+                <form method="POST" action="{{ url_for('remove_from_cart') }}">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <button type="submit" style="background:#999;">Remove</button>
+                </form>
+                <span class="price">€{{ "%.2f"|format(item.subtotal_cents / 100) }}</span>
+            </div>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-            <form method="POST" action="{{ url_for('update_cart') }}" style="display:flex; align-items:center; gap:6px;">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="20" style="width:55px; text-align:center;">
-                <button type="submit">Update</button>
-            </form>
-            <form method="POST" action="{{ url_for('remove_from_cart') }}">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <button type="submit" style="background:#999;">Remove</button>
-            </form>
-            <span class="price">€{{ "%.2f"|format(item.subtotal_cents / 100) }}</span>
+        {% endfor %}
+        <div class="item" style="font-size:1.2em; border-top:2px solid var(--primary);">
+            <div class="item-name">Total</div>
+            <div class="price">€{{ "%.2f"|format(total_cents / 100) }}</div>
         </div>
-    </div>
-    {% endfor %}
-
-    <div class="item" style="font-size:1.2em; border-top:2px solid var(--primary);">
-        <div class="item-name">Total</div>
-        <div class="price">€{{ "%.2f"|format(total_cents / 100) }}</div>
-    </div>
-
-    <p style="margin-top:20px;">
-        <a href="{{ url_for('menu') }}">Add more items</a> &nbsp;|&nbsp;
-        <a href="{{ url_for('checkout') }}"><button>Proceed to checkout</button></a>
-    </p>
-{% endif %}
+        <p style="margin-top:20px;">
+            <a href="{{ url_for('menu') }}" style="color:#ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.6);">Add more items</a> &nbsp;|&nbsp;
+            <a href="{{ url_for('checkout') }}"><button>Proceed to checkout</button></a>
+        </p>
+    {% endif %}
+</div>
 {% endblock %}
