@@ -10,12 +10,12 @@
 
     <div class="tab-bar">
         {% for course in courses %}
-        <button class="tab-btn {% if loop.first %}active{% endif %}" onclick="showTab('{{ course }}')" id="tab-btn-{{ course }}">{{ course | capitalize }}</button>
+        <button class="tab-btn {% if course == active_tab %}active{% endif %}" onclick="showTab('{{ course }}')" id="tab-btn-{{ course }}">{{ course | capitalize }}</button>
         {% endfor %}
     </div>
 
     {% for course in courses %}
-    <div class="tab-panel {% if loop.first %}active{% endif %}" id="tab-{{ course }}">
+    <div class="tab-panel {% if course == active_tab %}active{% endif %}" id="tab-{{ course }}">
         {% if menu_by_course[course] %}
         {% for item in menu_by_course[course] %}
         <div class="item">
@@ -34,6 +34,7 @@
                 <span class="price">€{{ "%.2f"|format(item.price_cents / 100) }}</span>
                 <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:flex; align-items:center; margin-left:10px; gap:6px;">
                     <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <input type="hidden" name="course" value="{{ course }}">
                     <input type="number" name="quantity" value="1" min="1" max="20" style="width:55px; text-align:center;">
                     <button type="submit">Add</button>
                 </form>

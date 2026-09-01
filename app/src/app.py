@@ -43,7 +43,6 @@ ITEM_ICONS = {
     "Sri Lankan Tea": "🍵",
 }
 
-
 @app.route("/")
 def menu():
     conn = get_connection()
@@ -60,7 +59,10 @@ def menu():
         item["icon"] = ITEM_ICONS.get(item["name"], "🍽️")
         menu_by_course[item["course"]].append(item)
 
-    return render_template("menu.html", menu_by_course=menu_by_course, courses=COURSES)
+    active_tab = request.args.get("tab", COURSES[0])
+    return render_template("menu.html", menu_by_course=menu_by_course, courses=COURSES, active_tab=active_tab)
+
+
 
 
 @app.route("/cart/add", methods=["POST"])
@@ -72,7 +74,8 @@ def add_to_cart():
     cart[item_id] = cart.get(item_id, 0) + quantity
     session["cart"] = cart
 
-    return redirect(url_for("menu"))
+    course = request.form.get("course")
+    return redirect(url_for("menu", tab=course) if course else url_for("menu"))
 
 @app.route("/cart/update", methods=["POST"])
 def update_cart():
