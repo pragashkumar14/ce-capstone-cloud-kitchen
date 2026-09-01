@@ -52,3 +52,11 @@ module "monitoring" {
   asg_name                 = module.compute.asg_name
   db_instance_id           = module.database.db_instance_id
 }
+
+module "storage" {
+  source = "./modules/storage"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
