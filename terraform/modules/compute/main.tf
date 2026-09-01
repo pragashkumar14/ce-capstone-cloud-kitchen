@@ -98,6 +98,21 @@ resource "aws_iam_role_policy" "secrets_access" {
     }]
   })
 }
+
+
+resource "aws_iam_role_policy" "cloudwatch_metrics" {
+  name_prefix = "${var.project_name}-${var.environment}-cwmetrics-"
+  role        = aws_iam_role.app_instance.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = "cloudwatch:PutMetricData"
+      Resource = "*"
+    }]
+  })
+}
 resource "aws_iam_instance_profile" "app" {
   name_prefix = "${var.project_name}-${var.environment}-app-"
   role        = aws_iam_role.app_instance.name
