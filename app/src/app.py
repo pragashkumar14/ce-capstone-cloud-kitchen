@@ -217,6 +217,11 @@ def checkout():
         directions_url=directions_url,
     )
 
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+
 
 @app.route("/health")
 def health():

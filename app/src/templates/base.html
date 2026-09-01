@@ -175,5 +175,8 @@
         <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart{% if cart_count %} ({{ cart_count }}){% endif %}</a>
     </header>
     {% block content %}{% endblock %}
+    <footer style="text-align:center; padding:20px 0; color:var(--text-muted); font-size:0.85em;">
+        <a href="{{ url_for('privacy') }}" style="color:var(--text-muted);">Privacy Policy</a>
+    </footer>
 </body>
 </html>
