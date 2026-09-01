@@ -6,9 +6,9 @@
     <title>{% block title %}Pam Kitchen{% endblock %}</title>
     <style>
         :root {
-            --primary: #d9480f;
-            --primary-dark: #a8380a;
-            --accent: #f4a261;
+            --primary: #2d8a4e;
+            --primary-dark: #1f6b38;
+            --accent: #4a90d9;
             --bg: #fff8f0;
             --card-bg: #ffffff;
             --text: #2b2118;
@@ -37,7 +37,8 @@
             gap: 10px;
         }
         .brand-logo {
-            font-size: 2rem;
+            width: 44px;
+            height: 44px;
         }
         .brand-name {
             font-size: 1.6rem;
@@ -100,8 +101,14 @@
 <body>
     <header class="site-header">
         <div class="brand">
-            <span class="brand-logo">🍽️</span>
-            <span class="brand-name">PAM KITCHEN</span>
+            <svg class="brand-logo" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="22" cy="22" r="20" fill="#2d8a4e"/>
+                <circle cx="22" cy="22" r="20" fill="none" stroke="#4a90d9" stroke-width="2.5"/>
+                <circle cx="22" cy="22" r="12" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+                <path d="M14 12 L14 22 M14 16 L16 16 M14 12 L12 12" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+                <path d="M30 12 C31.5 14 31.5 18 30 20 L30 32" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="brand-name"><span style="color:#2d8a4e;">PAM</span> <span style="color:#4a90d9;">KITCHEN</span></span>
         </div>
         <a href="{{ url_for('view_cart') }}" class="cart-link">🛒 Cart</a>
     </header>
