@@ -10,7 +10,11 @@
     {% for item in menu_by_course[course] %}
     <div class="item">
         <div class="item-main">
+            {% if item.image_url %}
+            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-photo">
+            {% else %}
             <span class="item-icon">{{ item.icon }}</span>
+            {% endif %}
             <div>
                 <div class="item-name">{{ item.name }}</div>
                 <div class="item-desc">{{ item.description }}</div>
