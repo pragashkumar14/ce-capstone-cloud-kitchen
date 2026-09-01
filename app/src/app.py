@@ -177,6 +177,20 @@ def checkout():
     conn.close()
     session.pop("cart", None)
 
+    try:
+        import boto3
+        cw = boto3.client("cloudwatch", region_name="eu-west-3")
+        cw.put_metric_data(
+            Namespace="PamKitchen/Sales",
+            MetricData=[
+                {"MetricName": "OrdersPlaced", "Value": 1, "Unit": "Count"},
+                {"MetricName": "RevenueEUR", "Value": total_cents / 100, "Unit": "None"},
+            ],
+        )
+    except Exception:
+        pass  # never let a metrics failure break checkout
+
+
     directions_url = None
     if customer_address:
         from urllib.parse import quote

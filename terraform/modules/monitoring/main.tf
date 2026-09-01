@@ -145,6 +145,34 @@ resource "aws_cloudwatch_dashboard" "main" {
             ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", var.db_instance_id, { stat = "Average", period = 60 }]
           ]
         }
+      },
+      {
+        type   = "metric"
+        x      = 12
+        y      = 12
+        width  = 12
+        height = 6
+        properties = {
+          title  = "Orders Placed"
+          region = "eu-west-3"
+          metrics = [
+            ["PamKitchen/Sales", "OrdersPlaced", { stat = "Sum", period = 300 }]
+          ]
+        }
+      },
+      {
+        type   = "metric"
+        x      = 0
+        y      = 18
+        width  = 12
+        height = 6
+        properties = {
+          title  = "Revenue (EUR)"
+          region = "eu-west-3"
+          metrics = [
+            ["PamKitchen/Sales", "RevenueEUR", { stat = "Sum", period = 300 }]
+          ]
+        }
       }
     ]
   })
