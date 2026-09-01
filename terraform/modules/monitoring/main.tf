@@ -77,101 +77,151 @@ resource "aws_cloudwatch_dashboard" "main" {
   dashboard_body = jsonencode({
     widgets = [
       {
-        type   = "metric"
+        type   = "text"
         x      = 0
         y      = 0
+        width  = 24
+        height = 2
+        properties = {
+          markdown = "# 🍽️ Pam Kitchen — Observability Dashboard\n**Domain:** pam-kitchen.online | **ASG:** ${var.asg_name} | **Region:** eu-west-3"
+        }
+      },
+      {
+        type   = "text"
+        x      = 0
+        y      = 2
+        width  = 24
+        height = 1
+        properties = {
+          markdown = "## Golden Signals — Traffic & Errors"
+        }
+      },
+      {
+        type   = "metric"
+        x      = 0
+        y      = 3
         width  = 12
         height = 6
         properties = {
           title  = "Traffic — Request Count"
           region = "eu-west-3"
           metrics = [
-            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", var.alb_arn_suffix, { stat = "Sum", period = 60 }]
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", var.alb_arn_suffix, { stat = "Sum", period = 60, color = "#1f77b4" }]
           ]
         }
       },
       {
         type   = "metric"
         x      = 12
-        y      = 0
-        width  = 12
-        height = 6
-        properties = {
-          title  = "Latency — Target Response Time"
-          region = "eu-west-3"
-          metrics = [
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "Average", period = 60 }]
-          ]
-        }
-      },
-      {
-        type   = "metric"
-        x      = 0
-        y      = 6
+        y      = 3
         width  = 12
         height = 6
         properties = {
           title  = "Errors — 5XX Count"
           region = "eu-west-3"
           metrics = [
-            ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", var.alb_arn_suffix, { stat = "Sum", period = 60 }]
+            ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", var.alb_arn_suffix, { stat = "Sum", period = 60, color = "#d62728" }]
           ]
         }
       },
       {
-        type   = "metric"
-        x      = 12
-        y      = 6
-        width  = 12
-        height = 6
+        type   = "text"
+        x      = 0
+        y      = 9
+        width  = 24
+        height = 1
         properties = {
-          title  = "Saturation — ASG CPU Utilization"
-          region = "eu-west-3"
-          metrics = [
-            ["AWS/EC2", "CPUUtilization", "AutoScalingGroupName", var.asg_name, { stat = "Average", period = 60 }]
-          ]
+          markdown = "## Golden Signals — Latency & Saturation"
         }
       },
       {
         type   = "metric"
         x      = 0
-        y      = 12
-        width  = 12
+        y      = 10
+        width  = 8
         height = 6
         properties = {
-          title  = "RDS CPU Utilization"
+          title  = "Latency — Target Response Time"
           region = "eu-west-3"
           metrics = [
-            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", var.db_instance_id, { stat = "Average", period = 60 }]
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "Average", period = 60, color = "#1f77b4" }]
           ]
         }
       },
       {
         type   = "metric"
-        x      = 12
-        y      = 12
+        x      = 8
+        y      = 10
+        width  = 8
+        height = 6
+        properties = {
+          title  = "Saturation — ASG CPU Utilization"
+          region = "eu-west-3"
+          metrics = [
+            ["AWS/EC2", "CPUUtilization", "AutoScalingGroupName", var.asg_name, { stat = "Average", period = 60, color = "#2ca02c" }]
+          ]
+        }
+      },
+      {
+        type   = "metric"
+        x      = 16
+        y      = 10
+        width  = 8
+        height = 6
+        properties = {
+          title  = "RDS CPU Utilization"
+          region = "eu-west-3"
+          metrics = [
+            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", var.db_instance_id, { stat = "Average", period = 60, color = "#2ca02c" }]
+          ]
+        }
+      },
+      {
+        type   = "text"
+        x      = 0
+        y      = 16
+        width  = 24
+        height = 1
+        properties = {
+          markdown = "## Business Signals"
+        }
+      },
+      {
+        type   = "metric"
+        x      = 0
+        y      = 17
         width  = 12
         height = 6
         properties = {
           title  = "Orders Placed"
           region = "eu-west-3"
           metrics = [
-            ["PamKitchen/Sales", "OrdersPlaced", { stat = "Sum", period = 300 }]
+            ["PamKitchen/Sales", "OrdersPlaced", { stat = "Sum", period = 300, color = "#2ca02c" }]
           ]
         }
       },
       {
         type   = "metric"
-        x      = 0
-        y      = 18
+        x      = 12
+        y      = 17
         width  = 12
         height = 6
         properties = {
           title  = "Revenue (EUR)"
           region = "eu-west-3"
           metrics = [
-            ["PamKitchen/Sales", "RevenueEUR", { stat = "Sum", period = 300 }]
+            ["PamKitchen/Sales", "RevenueEUR", { stat = "Sum", period = 300, color = "#1f77b4" }]
           ]
+        }
+      },
+      {
+        type   = "text"
+        x      = 0
+        y      = 23
+        width  = 24
+        height = 2
+        properties = {
+          markdown = "---\n**Questions or issues?** Contact Pragash Kumaravel (Cloud/DevOps Engineer) at pragash_m@hotmail.co.uk | See `RUNBOOK.md` in the project repository for troubleshooting steps."
         }
       }
     ]
