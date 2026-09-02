@@ -239,6 +239,16 @@ def checkout():
 def privacy():
     return render_template("privacy.html")
 
+@app.route("/demo/trigger-error")
+def demo_trigger_error():
+    # Gated with a simple key so this can't be accidentally or maliciously
+    # spammed by a random visitor before the demo. Deliberately triggers a
+    # real 500 to demonstrate the CloudWatch error alarm and SNS notification.
+    if request.args.get("key") != "pamkitchen-demo-2026":
+        return "Not found", 404
+    raise Exception("Deliberate demo error for observability testing")
+
+
 
 
 @app.route("/health")
