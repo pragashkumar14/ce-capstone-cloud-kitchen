@@ -21,6 +21,7 @@ resource "aws_security_group" "alb" {
   }
 
   egress {
+    description = "Allow all outbound (ALB has no inbound-dependent services to restrict egress to)"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -51,6 +52,7 @@ resource "aws_security_group" "app" {
   }
 
   egress {
+    description = "Allow app instances outbound access to RDS, S3, Secrets Manager, and package repos"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -125,6 +127,7 @@ resource "aws_lb" "main" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = var.public_subnet_ids
+  drop_invalid_header_fields = true
 
   tags = {
     Name = "${var.project_name}-${var.environment}-alb"
@@ -243,6 +246,12 @@ resource "aws_launch_template" "app" {
 
   iam_instance_profile {
     name = aws_iam_instance_profile.app.name
+  }
+
+  metadata_options {
+    http_tokens                = "required"
+    http_endpoint               = "enabled"
+    http_put_response_hop_limit = 1
   }
 
   vpc_security_group_ids = [aws_security_group.app.id]

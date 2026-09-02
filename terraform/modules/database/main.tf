@@ -40,6 +40,7 @@ resource "aws_security_group" "db" {
   }
 
   egress {
+    description = "Allow outbound for RDS engine updates and internal AWS communication"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
