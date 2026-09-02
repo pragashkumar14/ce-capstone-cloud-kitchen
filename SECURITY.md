@@ -60,3 +60,15 @@ Three tools plus one manual check were used, satisfying the requirement for auto
 3. **Trivy (filesystem mode)** — scanned Python dependencies (`requirements.txt`) for known vulnerabilities. Zero vulnerabilities found.
 4. **Manual verification** — confirmed live, via AWS CLI against a running instance, that IMDSv2 is genuinely enforced (`HttpTokens: required`), not just present in Terraform code. Also manually reviewed the checkout form's SQL query construction to confirm parameterized queries are used throughout, preventing SQL injection.
 
+
+## Incident Response Plan
+
+Pre-written, not improvised in the moment.
+
+1. **Isolate** — Remove the affected instance from the Auto Scaling Group's target group (`aws elbv2 deregister-targets`), or revoke its security group's inbound rules entirely, stopping further traffic to it without destroying evidence.
+2. **Investigate** — Pull the instance's logs via SSM (`sudo journalctl -u cloudkitchen`), check the CloudWatch dashboard for anomalies in traffic/error/CPU metrics around the incident window, and review the AWS Config compliance report for any configuration drift.
+3. **Contain** — Rotate the affected credential immediately: `aws secretsmanager put-secret-value` to generate new database or admin credentials, then cycle the ASG so all instances pick up the new secret. If the S3 deployment bucket is suspected compromised, roll back to a previous object version (versioning is enabled specifically for this).
+4. **Notify** — The SNS topic already alerts on error-rate, latency, and saturation anomalies via email. For a confirmed incident, manually notify the team/instructor via the contact channel listed in the CloudWatch dashboard footer.
+5. **Remediate** — Push the fix through the normal pipeline: commit → GitHub Actions validates → merge → apply (for infrastructure) or push to `app/src` (for application code, auto-deployed via the S3 pipeline). Never patch a running instance by hand and leave the fix undocumented in code.
+6. **Post-mortem** — Document root cause, timeline, and what changed as a result in `RUNBOOK.md`. Update this incident response plan itself if the process revealed a gap.
+
