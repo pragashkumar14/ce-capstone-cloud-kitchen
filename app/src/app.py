@@ -335,4 +335,4 @@ def kitchen_orders_api():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
-# Automated S3 deployment pipeline - verified working
+# Automated S3 deployment pipeline - state now includes output
