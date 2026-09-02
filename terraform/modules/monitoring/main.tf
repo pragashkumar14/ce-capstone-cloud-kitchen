@@ -194,6 +194,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
+          view   = "bar",
           title  = "Orders Placed"
           region = "eu-west-3"
           metrics = [
@@ -208,6 +209,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
+          view   = "bar",
           title  = "Revenue (EUR)"
           region = "eu-west-3"
           metrics = [
