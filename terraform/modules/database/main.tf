@@ -4,6 +4,11 @@ resource "random_password" "db" {
   special = false # avoids characters RDS sometimes rejects in connection strings
 }
 
+resource "random_password" "admin" {
+  length  = 16
+  special = false
+}
+
 resource "aws_secretsmanager_secret" "db_credentials" {
   name_prefix = "${var.project_name}-${var.environment}-db-"
 }
@@ -14,6 +19,8 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
     username = var.db_username
     password = random_password.db.result
     dbname   = var.db_name
+    admin_username = "kitchenstaff"
+    admin_password = random_password.admin.result
   })
 }
 
