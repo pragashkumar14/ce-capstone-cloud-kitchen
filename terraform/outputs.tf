@@ -30,3 +30,7 @@ output "route53_nameservers" {
   value = module.compute.route53_nameservers
 }
 
+
+output "deploy_bucket_name" {
+  value = module.storage.deploy_bucket_name
+}
