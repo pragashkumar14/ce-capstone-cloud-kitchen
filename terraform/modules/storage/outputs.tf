@@ -6,3 +6,11 @@ output "bucket_domain_name" {
   description = "Public URL base for uploaded images"
   value       = aws_s3_bucket.images.bucket_regional_domain_name
 }
+
+output "deploy_bucket_name" {
+  value = aws_s3_bucket.deploy.id
+}
+
+output "deploy_bucket_arn" {
+  value = aws_s3_bucket.deploy.arn
+}

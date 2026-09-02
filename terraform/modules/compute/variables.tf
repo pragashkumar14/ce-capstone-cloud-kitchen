@@ -64,3 +64,13 @@ variable "db_host" {
   description = "RDS endpoint hostname (no port)"
   type        = string
 }
+
+variable "deploy_bucket_arn" {
+  description = "ARN of the S3 bucket holding app deployment artifacts"
+  type        = string
+}
+
+variable "deploy_bucket_name" {
+  description = "Name of the S3 bucket holding app deployment artifacts"
+  type        = string
+}

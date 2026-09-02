@@ -28,3 +28,24 @@ resource "aws_s3_bucket_policy" "images_public_read" {
     }]
   })
 }
+
+# Private bucket for application deployment artifacts — no public access at all
+resource "aws_s3_bucket" "deploy" {
+  bucket_prefix = "${var.project_name}-${var.environment}-deploy-"
+}
+
+resource "aws_s3_bucket_public_access_block" "deploy" {
+  bucket = aws_s3_bucket.deploy.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_versioning" "deploy" {
+  bucket = aws_s3_bucket.deploy.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}

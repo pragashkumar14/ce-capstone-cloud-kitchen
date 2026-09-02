@@ -28,6 +28,8 @@ module "compute" {
   db_secret_arn          = module.database.db_secret_arn
   private_app_subnet_ids = module.networking.private_app_subnet_ids
   db_host                 = module.database.db_address
+  deploy_bucket_name      = module.storage.deploy_bucket_name
+  deploy_bucket_arn       = module.storage.deploy_bucket_arn
   domain_name             = "pam-kitchen.online"
 }
 

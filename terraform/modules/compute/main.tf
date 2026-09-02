@@ -115,6 +115,20 @@ resource "aws_iam_role_policy" "cloudwatch_metrics" {
     }]
   })
 }
+
+resource "aws_iam_role_policy" "deploy_bucket_access" {
+  name_prefix = "${var.project_name}-${var.environment}-deploy-"
+  role        = aws_iam_role.app_instance.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = "s3:GetObject"
+      Resource = "${var.deploy_bucket_arn}/*"
+    }]
+  })
+}
 resource "aws_iam_instance_profile" "app" {
   name_prefix = "${var.project_name}-${var.environment}-app-"
   role        = aws_iam_role.app_instance.name
@@ -260,10 +274,12 @@ resource "aws_launch_template" "app" {
     #!/bin/bash
     set -e
     apt-get update -y
-    apt-get install -y python3-pip python3-venv git
+    apt-get install -y python3-pip python3-venv unzip awscli
 
-    git clone https://github.com/pragashkumar14/ce-capstone-cloud-kitchen.git /opt/app
-    cd /opt/app/app/src
+    mkdir -p /opt/app
+    aws s3 cp s3://${var.deploy_bucket_name}/app.zip /opt/app/app.zip --region eu-west-3
+    unzip -o /opt/app/app.zip -d /opt/app
+    cd /opt/app
     python3 -m venv venv
     ./venv/bin/pip install -r requirements.txt
 
@@ -273,8 +289,8 @@ resource "aws_launch_template" "app" {
     After=network.target
 
     [Service]
-    WorkingDirectory=/opt/app/app/src
-    ExecStart=/opt/app/app/src/venv/bin/gunicorn -b 0.0.0.0:${var.app_port} app:app
+    WorkingDirectory=/opt/app
+    ExecStart=/opt/app/venv/bin/gunicorn -b 0.0.0.0:${var.app_port} app:app
     Restart=always
     Environment=AWS_REGION=eu-west-3
     Environment=DB_SECRET_ARN=${var.db_secret_arn}
