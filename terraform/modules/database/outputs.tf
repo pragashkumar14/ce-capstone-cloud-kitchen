@@ -19,5 +19,5 @@ output "db_address" {
 
 output "db_instance_id" {
   description = "RDS instance identifier for CloudWatch metrics"
-  value       = aws_db_instance.main.id
+  value       = aws_db_instance.main.identifier
 }
