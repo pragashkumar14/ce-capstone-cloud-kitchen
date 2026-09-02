@@ -25,6 +25,11 @@ jobs:
           cd app/src
           zip -r ../../app.zip . -x "venv/*" "__pycache__/*" "*.pyc"
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+
       - name: Get deploy bucket name
         id: bucket
         run: |
