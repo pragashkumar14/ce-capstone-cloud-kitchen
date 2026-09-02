@@ -178,9 +178,24 @@ resource "aws_cloudwatch_dashboard" "main" {
         }
       },
       {
-        type   = "text"
+        type   = "alarm"
         x      = 0
         y      = 16
+        width  = 24
+        height = 4
+        properties = {
+          title  = "Alarm Status"
+          alarms = [
+            aws_cloudwatch_metric_alarm.alb_5xx.arn,
+            aws_cloudwatch_metric_alarm.alb_latency.arn,
+            aws_cloudwatch_metric_alarm.asg_cpu.arn
+          ]
+        }
+      },
+      {
+        type   = "text"
+        x      = 0
+        y      = 20
         width  = 24
         height = 1
         properties = {
@@ -190,7 +205,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type   = "metric"
         x      = 0
-        y      = 17
+        y      = 21
         width  = 12
         height = 6
         properties = {
@@ -204,7 +219,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type   = "metric"
         x      = 12
-        y      = 17
+        y      = 21
         width  = 12
         height = 6
         properties = {
@@ -218,7 +233,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       {
         type   = "text"
         x      = 0
-        y      = 23
+        y      = 27
         width  = 24
         height = 2
         properties = {
