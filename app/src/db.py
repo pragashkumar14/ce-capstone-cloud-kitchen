@@ -28,3 +28,8 @@ def get_connection():
         cursor_factory=RealDictCursor,
         connect_timeout=5,
     )
+
+
+def get_admin_credentials():
+    creds = _get_credentials()
+    return creds["admin_username"], creds["admin_password"]

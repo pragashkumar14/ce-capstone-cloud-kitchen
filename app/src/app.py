@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from db import get_connection
+from db import get_connection, get_admin_credentials
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-change-me"  # fine for now, not security-sensitive (no auth, no PII beyond a name)
@@ -47,6 +47,24 @@ ITEM_ICONS = {
 def inject_cart_count():
     cart = session.get("cart", {})
     return {"cart_count": sum(cart.values())}
+
+def require_admin_auth(f):
+    from functools import wraps
+
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        admin_user, admin_pass = get_admin_credentials()
+        if not auth or auth.username != admin_user or auth.password != admin_pass:
+            return (
+                "Authentication required",
+                401,
+                {"WWW-Authenticate": 'Basic realm="Kitchen Staff Only"'},
+            )
+        return f(*args, **kwargs)
+
+    return decorated
+
 
 
 @app.route("/")
@@ -234,6 +252,7 @@ def health():
 
 
 @app.route("/kitchen")
+@require_admin_auth
 def kitchen():
     conn = get_connection()
     cur = conn.cursor()
@@ -252,6 +271,7 @@ def kitchen():
     return render_template("kitchen.html", orders=orders)
 
 @app.route("/kitchen/complete/<int:order_id>", methods=["POST"])
+@require_admin_auth
 def complete_order(order_id):
     conn = get_connection()
     cur = conn.cursor()
@@ -264,6 +284,7 @@ def complete_order(order_id):
     return redirect(url_for("kitchen"))
 
 @app.route("/kitchen/all")
+@require_admin_auth
 def all_orders():
     conn = get_connection()
     cur = conn.cursor()
@@ -283,6 +304,7 @@ def all_orders():
 
 
 @app.route("/kitchen/api/orders")
+@require_admin_auth
 def kitchen_orders_api():
     conn = get_connection()
     cur = conn.cursor()
