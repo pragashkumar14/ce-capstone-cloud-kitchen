@@ -1,0 +1,38 @@
+name: Deploy App to S3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/src/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
+
+      - name: Zip app
+        run: |
+          cd app/src
+          zip -r ../../app.zip . -x "venv/*" "__pycache__/*" "*.pyc"
+
+      - name: Get deploy bucket name
+        id: bucket
+        run: |
+          cd terraform
+          terraform init -input=false
+          BUCKET=$(terraform output -raw deploy_bucket_name 2>/dev/null || echo "")
+          echo "bucket=$BUCKET" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to S3
+        run: |
+          aws s3 cp app.zip "s3://${{ steps.bucket.outputs.bucket }}/app.zip"
