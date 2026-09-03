@@ -9,6 +9,13 @@ resource "aws_sns_topic_subscription" "email" {
   endpoint  = var.alert_email
 }
 
+resource "aws_sns_topic_subscription" "email_backup" {
+  topic_arn = aws_sns_topic.alerts.arn
+  protocol  = "email"
+  endpoint  = "pragashk14m@gmail.com"
+}
+
+
 # --- Alarm 1: Errors (ALB 5xx) ---
 resource "aws_cloudwatch_metric_alarm" "alb_5xx" {
   alarm_name          = "${var.project_name}-${var.environment}-alb-5xx-errors"
