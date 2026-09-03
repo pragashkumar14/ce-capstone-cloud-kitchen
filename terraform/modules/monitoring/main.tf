@@ -90,7 +90,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 24
         height = 2
         properties = {
-          markdown = "# 🍽️ Pam Kitchen — Observability Dashboard\n**Domain:** pam-kitchen.online | **ASG:** ${var.asg_name} | **Region:** eu-west-3"
+          markdown = "# 🍽️ PAM KITCHEN — Observability Dashboard\n**Domain:** pam-kitchen.online | **ASG:** ${var.asg_name} | **Region:** eu-west-3"
         }
       },
       {
@@ -100,7 +100,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 24
         height = 1
         properties = {
-          markdown = "## Golden Signals — Traffic & Errors"
+          markdown   = "## Golden Signals — Traffic & Errors"
+          background = "transparent"
         }
       },
       {
@@ -138,7 +139,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 24
         height = 1
         properties = {
-          markdown = "## Golden Signals — Latency & Saturation"
+          markdown   = "## Golden Signals — Latency & Saturation"
+          background = "transparent"
         }
       },
       {
@@ -206,7 +208,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 24
         height = 1
         properties = {
-          markdown = "## Business Signals"
+          markdown   = "## Business Signals"
+          background = "transparent"
         }
       },
       {
