@@ -153,8 +153,8 @@ resource "aws_cloudwatch_dashboard" "main" {
           title  = "Latency — Target Response Time"
           region = "eu-west-3"
           metrics = [
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "Average", period = 60, color = "#1f77b4" }],
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "p95", period = 60, color = "#2ca02c" }]
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "Average", period = 300, color = "#1f77b4" }],
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "p95", period = 300, color = "#2ca02c" }]
           ]
         }
       },
