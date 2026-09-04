@@ -19,14 +19,14 @@ resource "aws_sns_topic_subscription" "email_backup" {
 resource "aws_cloudwatch_metric_alarm" "alb_5xx" {
   alarm_name          = "${var.project_name}-${var.environment}-alb-5xx-errors"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods   = 2
-  metric_name          = "HTTPCode_Target_5XX_Count"
-  namespace            = "AWS/ApplicationELB"
-  period               = 60
-  statistic            = "Sum"
-  threshold            = 5
-  alarm_description    = "Triggers when the ALB sees more than 5 backend errors in a minute"
-  treat_missing_data   = "notBreaching"
+  evaluation_periods  = 2
+  metric_name         = "HTTPCode_Target_5XX_Count"
+  namespace           = "AWS/ApplicationELB"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 5
+  alarm_description   = "Triggers when the ALB sees more than 5 backend errors in a minute"
+  treat_missing_data  = "notBreaching"
 
   dimensions = {
     LoadBalancer = var.alb_arn_suffix
@@ -40,14 +40,14 @@ resource "aws_cloudwatch_metric_alarm" "alb_5xx" {
 resource "aws_cloudwatch_metric_alarm" "alb_latency" {
   alarm_name          = "${var.project_name}-${var.environment}-alb-high-latency"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods   = 2
-  metric_name          = "TargetResponseTime"
-  namespace            = "AWS/ApplicationELB"
-  period               = 60
-  statistic            = "Average"
-  threshold            = 2
-  alarm_description    = "Triggers when average response time exceeds 2 seconds"
-  treat_missing_data   = "notBreaching"
+  evaluation_periods  = 2
+  metric_name         = "TargetResponseTime"
+  namespace           = "AWS/ApplicationELB"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 2
+  alarm_description   = "Triggers when average response time exceeds 2 seconds"
+  treat_missing_data  = "notBreaching"
 
   dimensions = {
     LoadBalancer = var.alb_arn_suffix
@@ -61,14 +61,14 @@ resource "aws_cloudwatch_metric_alarm" "alb_latency" {
 resource "aws_cloudwatch_metric_alarm" "asg_cpu" {
   alarm_name          = "${var.project_name}-${var.environment}-asg-high-cpu"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods   = 2
-  metric_name          = "CPUUtilization"
-  namespace            = "AWS/EC2"
-  period               = 60
-  statistic            = "Average"
-  threshold            = 80
-  alarm_description    = "Triggers when average CPU across the ASG exceeds 80%"
-  treat_missing_data   = "notBreaching"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 80
+  alarm_description   = "Triggers when average CPU across the ASG exceeds 80%"
+  treat_missing_data  = "notBreaching"
 
   dimensions = {
     AutoScalingGroupName = var.asg_name
@@ -153,8 +153,8 @@ resource "aws_cloudwatch_dashboard" "main" {
           title  = "Latency — Target Response Time"
           region = "eu-west-3"
           metrics = [
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "Average", period = 60, color = "#1f77b4" }],
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "p95", period = 60, color = "#2ca02c" }]
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "Average", period = 300, color = "#1f77b4" }],
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", var.alb_arn_suffix, { stat = "p95", period = 300, color = "#2ca02c" }]
           ]
         }
       },
@@ -193,7 +193,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 24
         height = 4
         properties = {
-          title  = "Alarm Status"
+          title = "Alarm Status"
           alarms = [
             aws_cloudwatch_metric_alarm.alb_5xx.arn,
             aws_cloudwatch_metric_alarm.alb_latency.arn,

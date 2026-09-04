@@ -51,3 +51,4 @@ Approximately $24 total for the project (~$23 in AWS infrastructure over roughly
 
 Pragash Kumaravel — Ironhack Cloud Engineering Capstone, September 2026.
 
+# Branch protection test
