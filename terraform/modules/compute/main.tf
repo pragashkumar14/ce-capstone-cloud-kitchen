@@ -136,11 +136,11 @@ resource "aws_iam_instance_profile" "app" {
 # --- Load Balancer ---
 
 resource "aws_lb" "main" {
-  name_prefix        = "ckit-"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = var.public_subnet_ids
+  name_prefix                = "ckit-"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb.id]
+  subnets                    = var.public_subnet_ids
   drop_invalid_header_fields = true
 
   tags = {
@@ -263,7 +263,7 @@ resource "aws_launch_template" "app" {
   }
 
   metadata_options {
-    http_tokens                = "required"
+    http_tokens                 = "required"
     http_endpoint               = "enabled"
     http_put_response_hop_limit = 1
   }

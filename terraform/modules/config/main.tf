@@ -93,7 +93,7 @@ resource "aws_config_configuration_recorder_status" "main" {
 }
 
 resource "aws_config_config_rule" "s3_public_read_prohibited" {
-  name       = "${var.project_name}-${var.environment}-s3-no-public-read"
+  name = "${var.project_name}-${var.environment}-s3-no-public-read"
   source {
     owner             = "AWS"
     source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
@@ -102,7 +102,7 @@ resource "aws_config_config_rule" "s3_public_read_prohibited" {
 }
 
 resource "aws_config_config_rule" "restricted_ssh" {
-  name       = "${var.project_name}-${var.environment}-no-open-ssh"
+  name = "${var.project_name}-${var.environment}-no-open-ssh"
   source {
     owner             = "AWS"
     source_identifier = "INCOMING_SSH_DISABLED"
@@ -111,7 +111,7 @@ resource "aws_config_config_rule" "restricted_ssh" {
 }
 
 resource "aws_config_config_rule" "rds_storage_encrypted" {
-  name       = "${var.project_name}-${var.environment}-rds-encrypted"
+  name = "${var.project_name}-${var.environment}-rds-encrypted"
   source {
     owner             = "AWS"
     source_identifier = "RDS_STORAGE_ENCRYPTED"
@@ -120,7 +120,7 @@ resource "aws_config_config_rule" "rds_storage_encrypted" {
 }
 
 resource "aws_config_config_rule" "rds_public_access_check" {
-  name       = "${var.project_name}-${var.environment}-rds-not-public"
+  name = "${var.project_name}-${var.environment}-rds-not-public"
   source {
     owner             = "AWS"
     source_identifier = "RDS_INSTANCE_PUBLIC_ACCESS_CHECK"
